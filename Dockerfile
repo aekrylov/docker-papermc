@@ -4,10 +4,10 @@ MAINTAINER nimmis <kjell.havneskold@gmail.com>
 
 # MC_HOME         default directory for SPIGOT-server
 # MC_VER          default minecraft version to compile
-# SPIGOT_AUTORESTART  set to yes to restart if minecraft stop command is executed
+# MC_AUTORESTART  set to yes to restart if minecraft stop command is executed
 ENV MC_HOME=/minecraft \
     MC_VER=latest \
-    SPIGOT_AUTORESTART=yes
+    MC_AUTORESTART=yes
 
 # add extra files needed
 COPY rootfs /

@@ -134,15 +134,15 @@ sets the initial memory reservation used, use <size>m for Mb or <size>g for Gb, 
     -e MC_MINMEM=512m
 
 
-#### SPIGOT_AUTORESTART
+#### MC_AUTORESTART
 
 This variable controlls the behavior of the container when the **stop** command is issued inside minecraft
 
-	-e SPIGOT_AUTORESTART=yes
+	-e MC_AUTORESTART=yes
    
 Which is the default behavior and does not need to be specified, the minecraft server will autostart if the **stop** command is issued.
 
-	-e SPIGOT_AUTORESTART=no
+	-e MC_AUTORESTART=no
 	
 If the **stop** command is issued the minecraft server will stay down until the container is restarted or the command **mc_start** is issued
 
@@ -201,7 +201,7 @@ To make yourself operator in the game use **mc_send** command, for example give 
 
 Default the minecraft server will automatically restart on a **stop** inside the minecraft application. You can override this behavior by using
 
-	-e SPIGOT_AUTORESTART=no
+	-e MC_AUTORESTART=no
 
 This will prevent the server to restart and minecraft has to be started again with the **mc_start** command
 
@@ -258,9 +258,9 @@ When a external volume is mounted the UID of the owner of the volume may not mat
 
 To address this problem a check is done between UID of the owner of /minecraft and the UID of the user minecraft. If there is a mismatch the UID of the minecraft user is changed to match the UID of the directory.
 
-If you don't want to do this and want to manually set the UID of the minecraft user there is a variable named SPIGOT_UID which defines the minecraft user UID, adding
+If you don't want to do this and want to manually set the UID of the minecraft user there is a variable named MC_UID which defines the minecraft user UID, adding
 
-	-e SPIGOT_UID=1132
+	-e MC_UID=1132
 
 sets the minecraft user UID to 1132.
 
