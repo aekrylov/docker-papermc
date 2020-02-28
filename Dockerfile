@@ -2,7 +2,7 @@ FROM openjdk:8-jdk
 
 MAINTAINER aekrylov <github@aekrylov.me>
 
-# MC_HOME         default directory for SPIGOT-server
+# MC_HOME         default directory for Minecraft data
 # MC_VER          default minecraft version to compile
 ENV MC_HOME=/minecraft \
     MC_VER=latest
