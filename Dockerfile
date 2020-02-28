@@ -33,4 +33,6 @@ RUN apt-get update && \
 # expose minecraft port
 EXPOSE 25565
 
+USER minecraft
 
+ENTRYPOINT ["/bin/bash", "/start.sh"]
