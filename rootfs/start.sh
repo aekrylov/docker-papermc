@@ -25,7 +25,21 @@ download() {
 }
 
 check_eula() {
-  if [ -z "$EULA" ] ; then
+  #
+  # accept eula if set
+  #
+  # (c) 2016 nimmis <kjell.havneskold@gmail.com>
+
+  if [ ! -f $MC_HOME/eula.txt  ] ; then
+    echo '#EULA file created by minecraft script\neula=false' > $MC_HOME/eula.txt
+  fi
+
+  if [ -n "$EULA" ] ; then
+    echo "eula=$EULA" > $MC_HOME/eula.txt
+    chown minecraft $MC_HOME/eula.txt
+  fi
+
+  if [ `grep eula $MC_HOME/eula.txt |  grep -v 'true'` ] ; then
     echo "You have to accept Mojang EULA to run the server. Run with EULA environment variable set to true to accept it."
     echo "EULA text is available at https://account.mojang.com/documents/minecraft_eula"
     exit 1
