@@ -195,29 +195,18 @@ checkOK() {
 
 
 #
-# create spigot jar for requested version
+# download Paper jar for requested version
 #
 
 buildjar() {
   # build it if it not exists
-  if [ ! -f $MC_HOME/spigot-$1.jar ]; then
-    echo "Building spigot version ($1) jar file, be patient"
-    if [ -d /build-mc ]; then
-	rm -Rf /build-mc
-    fi
-    mkdir -p /build-mc
-    wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O /build-mc/BuildTools.jar
-    HOME=/build-mc
-    export HOME
-    cd $HOME
-    git config --global --unset core.autocrlf
-    java -Xmx1024M -jar BuildTools.jar --rev $1
-    cp /build-mc/Spigot/Spigot-Server/target/spigot-*.jar $MC_HOME/spigot-$1.jar
-    cd $MC_HOME/
-    rm -Rf /build-mc
+  cd $MC_HOME/
+  if [ ! -f server-$1.jar ]; then
+    echo "Downloading Paper version ($1) jar file"
+    wget https://papermc.io/api/v1/paper/$1/latest/download -O server-$1.jar
   fi
   execCMD "rm -f $MC_HOME/server.jar"
-  execCMD "ln -s $MC_HOME/spigot-$1.jar $MC_HOME/server.jar"
+  execCMD "ln -s $MC_HOME/server-$1.jar $MC_HOME/server.jar"
 }
 
 #
