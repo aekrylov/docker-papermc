@@ -66,4 +66,4 @@ MC_JAVA_OPS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM"   # java options for minecraft serve
 # Start the server, passing additional arguments if needed
 rm -rf /input.con
 touch /input.con
-execCMD "tail -f /input.con | java $MC_JAVA_OPS -jar $MC_HOME/$MC_PROC nogui $*"
+execCMD "tail -f /input.con | java $MC_JAVA_OPS -jar $MC_HOME/$MC_PROC nogui $*" | tee /output.con

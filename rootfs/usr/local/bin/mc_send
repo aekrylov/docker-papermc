@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
 echo "$*" >> /input.con
+echo "> $*"
+echo "=== Last lines of output (Ctrl-C to close): ==="
+tail -f /output.con

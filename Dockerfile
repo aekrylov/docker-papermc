@@ -18,10 +18,11 @@ RUN apt-get update && \
 # add extra files needed
 COPY rootfs /
 RUN chmod +x /usr/local/bin/mc_send
+RUN chmod +x /start.sh
 
 # expose minecraft port
 EXPOSE 25565
 
 WORKDIR /minecraft
 
-ENTRYPOINT ["/bin/bash", "/start.sh"]
+ENTRYPOINT ["/start.sh"]
