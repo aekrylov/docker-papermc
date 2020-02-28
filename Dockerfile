@@ -21,7 +21,6 @@ COPY rootfs /
 # expose minecraft port
 EXPOSE 25565
 
-USER minecraft
 WORKDIR /minecraft
 
 ENTRYPOINT ["/bin/bash", "/start.sh"]

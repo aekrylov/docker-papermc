@@ -34,7 +34,7 @@ check_eula() {
     echo '#EULA file created by minecraft script\neula=false' > $MC_HOME/eula.txt
   fi
 
-  if [ ! -z $EULA ] ; then
+  if [ -n "$EULA" ] ; then
     echo "eula=$EULA" > $MC_HOME/eula.txt
     chown minecraft $MC_HOME/eula.txt
   fi
@@ -64,4 +64,4 @@ fi
 MC_JAVA_OPS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM"   # java options for minecraft server
 
 # Start the server, passing additional arguments if needed
-java $MC_JAVA_OPS -jar $MC_HOME/$MC_PROC nogui "$@"
+execCMD java $MC_JAVA_OPS -jar $MC_HOME/$MC_PROC nogui "$@"
