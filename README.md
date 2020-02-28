@@ -3,22 +3,23 @@
 
 This docker image builds and runs the Paper Minecraft server. 
 It downloads a Paperclip JAR on startup for the version specified 
-in the environment and saves it to the /minecraft folder
+in the environment and saves it to the /minecraft folder.
 
-## Starting the container
+The image is based on [nimmis/docker-spigot](https://github.com/nimmis/docker-spigot), but was heavily refactored
 
-To run the latest stable version of this docker image run
+## How to use
+
+To run the latest stable version of this image run
 
 	docker run -d -p 25565:25565 -e EULA=true aekrylov/papermc
 
-the parameter
+Note that
 
 	-e EULA=true
 
-The is because Mojang now requires the end user to access their EULA, located at
-https://account.mojang.com/documents/minecraft_eula, the be able to start the server.
+indicates you agree with [Mojang EULA](https://account.mojang.com/documents/minecraft_eula), which is required to run the server.
 
-the parameter
+The parameter
 
 	-p 25565:25565
 
@@ -39,15 +40,14 @@ to the run command to give it the name minecraft, then you can start it easier w
 
 ## Selecting Minecraft version
 
-If you don't specify it will always compile the latest version but if you want a specific version you can specify it by adding
+By default the image will download the latest available version of PaperMC. To use the server for a specific 
+Minecraft version, add an env parameter to the `docker run` line
 
 	-e MC_VER=<version>
 
 For example, to build it with version 1.8 add
 
 	-e MC_VER=1.8
-
-to the docker run line.
 
 ## Memory settings
 
@@ -61,7 +61,7 @@ Sets the maximum memory to use <size>m for Mb or <size>g for Gb, if this paramet
 
 ### MC_MINMEM
 
-sets the initial memory reservation used, use <size>m for Mb or <size>g for Gb, if this parameter is not set, it is set to MC_MAXMEM, to set the initial size t0 512 Mb
+Sets the initial memory reservation used, use <size>m for Mb or <size>g for Gb, if this parameter is not set, it is set to MC_MAXMEM, to set the initial size t0 512 Mb
 
     -e MC_MINMEM=512m
 
@@ -75,7 +75,7 @@ more in the [Docker documentation](https://docs.docker.com/engine/reference/comm
 
 ## Sending commands to the server console
 
-You don't need to have an interactive container to be able to send commands to the console. You can use the
+You don't need to have an interactive container to be able to send commands to the console. You can use
 `mc_send` executable available in the running container, using `docker exec`. For example
 
 	docker exec papermc mc_send "time set day"
@@ -99,7 +99,7 @@ It will continue to output everything from the console until you press CTRL-C
 ### /restart
 
 Due to the nature of Docker, the server can't restart by itself, so /restart command will simply stop the server 
-(and the container). Docker commands are preferred.
+(and the container). Using Docker commands (`docker stop` / `docker start`) is preferred.
 
 ## Having the minecraft files on the host machine
 
@@ -114,7 +114,7 @@ To attach the minecraft directory in the container to directory /home/nimmis/mc-
 
 	-v /home/nimmis/mc-srv:/minecraft
 
-### problems with external mounted volumes
+### Mounted volume caveats
 
 When a external volume is mounted the UID of the owner of the volume may not match the UID of the minecraft user (1000).
 This can result in problems with write/read access to the files. 
@@ -123,7 +123,7 @@ To address this problem a check is done between UID of the owner of /minecraft a
 If there is a mismatch the UID of the minecraft user is changed to match the UID of the directory.
 
 If you don't want to do this and want to manually set the UID of the minecraft user there is a variable named 
-`SPIGOT_UID` which defines the minecraft user UID, adding
+`MC_UID` which defines the minecraft user UID, adding
 
 	-e MC_UID=1132
 
@@ -131,22 +131,4 @@ sets the minecraft user UID to 1132.
 
 ## Issues
 
-If you have any problems with or questions about this image, please contact us by submitting a ticket through a [GitHub issue](https://github.com/nimmis/docker-spigot/issues "GitHub issue")
-
-1. Look to see if someone already filled the bug, if not add a new one.
-2. Add a good title and description with the following information.
- - if possible an copy of the output from **cat /etc/BUILDS/*** from inside the container
- - any logs relevant for the problem
- - how the container was started (flags, environment variables, mounted volumes etc)
- - any other information that can be helpful
-
-## Contributing
-
-You are invited to contribute new features, fixes, or updates, large or small; we are always thrilled to receive pull requests, and do our best to process them as fast as we can.
-
-## Future features
-
-- automatic backup
-- plugins
-- more....
-
+If you have any problems with or questions about this image, please submit a ticket through a [GitHub issue](https://github.com/aekrylov/docker-papermc/issues "GitHub issue")
