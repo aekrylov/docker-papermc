@@ -17,7 +17,7 @@ download() {
   # download Paper jar for requested version, if it doesnt exist already
   #
   if [ ! -f server-$1.jar ]; then
-    echo "Downloading Paper version ($1) jar file"
+    echo "Downloading JAR for PaperMC v. $1"
     wget https://papermc.io/api/v1/paper/$1/latest/download -O server-$1.jar
   fi
   execCMD "rm -f $MC_HOME/server.jar"
@@ -25,34 +25,22 @@ download() {
 }
 
 check_eula() {
-  #
-  # accept eula if set
-  #
-  # (c) 2016 nimmis <kjell.havneskold@gmail.com>
-
-  if [ ! -f $MC_HOME/eula.txt  ] ; then
-    echo '#EULA file created by minecraft script\neula=false' > $MC_HOME/eula.txt
+  if [ -z "$EULA" ] ; then
+    echo "You have to accept Mojang EULA to run the server. Run with EULA environment variable set to true to accept it."
+    echo "EULA text is available at https://account.mojang.com/documents/minecraft_eula"
+    exit 1
   fi
-
-  if [ -n "$EULA" ] ; then
-    echo "eula=$EULA" > $MC_HOME/eula.txt
-    chown minecraft $MC_HOME/eula.txt
-  fi
-
-  `grep eula $MC_HOME/eula.txt |  grep -v 'true'` && echo "You haven't accepted EULA! run with EULA=true in env to accept" >&2 && exit 1
 }
 
 # Fix owner
 bash /check_minecraft_owner.sh
 
-# Download Paperclip JAR for specified version
-SVER=${MC_VER:-latest}
-echo "Setting version to $SVER"
-download $SVER
-
-# Pass EULA value
 check_eula
 
+# Download Paperclip JAR for specified version
+download ${MC_VER:-latest}
+
+# Process memory settings
 if [ -z "$MC_MAXMEM" ]; then
   MC_MAXMEM="1G"
 fi
@@ -61,7 +49,7 @@ if [ -z  "$MC_MINMEM" ]; then
   MC_MINMEM=$MC_MAXMEM ;
 fi
 
-MC_JAVA_OPS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM"   # java options for minecraft server
+MC_JAVA_OPS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM"
 
 # Start the server, passing additional arguments if needed
 rm -rf /input.con
