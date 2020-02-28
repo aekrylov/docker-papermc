@@ -1,12 +1,6 @@
-#!/bin/bash
-###########################################################
-#
-# script to send command to the server
-#
-# (c) 2016 nimmis <kjell.havneskold@gmail.com>
-#
-###########################################################
+#!/usr/bin/env bash
 
-echo "/etc/init.d/minecraft_server send \"$1\""
-/etc/init.d/minecraft_server send "$1 $2 $3 $4 $5"
-mc_log
+echo "$*" >> /input.con
+echo "> $*"
+echo "=== Last lines of output (Ctrl-C to close): ==="
+tail -f /output.con
