@@ -67,7 +67,7 @@ more in the [Docker documentation](https://docs.docker.com/engine/reference/comm
 You don't need to have an interactive container to be able to send commands to the console. You can use
 `mc_send` executable available in the running container, using `docker exec`. For example
 
-	docker exec papermc mc_send "time set day"
+	docker exec papermc mc_send op username
 
 The output will look like this
 
