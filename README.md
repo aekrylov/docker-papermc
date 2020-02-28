@@ -3,10 +3,10 @@
 
 This docker image builds and runs the spigot version of minecraft. 
 
-If the spigot.jar is not found in the minecraft directory the system pulls down BuildTool and build a new spigot.jar from the latest
+If the server.jar is not found in the minecraft directory the system pulls down BuildTool and build a new server.jar from the latest
 released minecraft.jar
 
-Each time the container is started the presence of the file /minecraft/spigot.jar, if the file is missing a build of spigot.jar is started.
+Each time the container is started the presence of the file /minecraft/server.jar, if the file is missing a build of server.jar is started.
 
 The spigot daemon is started with superovisord, see my Ubuntu container for a more detailed description of my implementation of an init-process in ubuntu, see [nimmis/ubuntu](https://hub.docker.com/r/nimmis/ubuntu/)
 
@@ -63,7 +63,7 @@ to the run command to give it the name minecraft, then you can start it easier w
 ## First time run
 
 This will take a couple of minutes depending on computer and network speed. It will pull down
-the selected version on BuildTools and build a spigot.jar from the selected minecraft version.
+the selected version on BuildTools and build a server.jar from the selected minecraft version.
 This is done in numerous steps so be patient. 
 
 you can follow the output from the compilation with then command (assume that you given the container
@@ -104,11 +104,11 @@ you can then exit from the log with CTRL-C
 
 If you don't specify it will always compile the latest version but if you want a specific version you can specify it by adding
 
-	-e SPIGOT_VER=<version>
+	-e MC_VER=<version>
 
 where <version> is the version you would like to use, to build it with version 1.8 add
 
-	-e SPIGOT_VER=1.8
+	-e MC_VER=1.8
 
 to the docker run line.
 
@@ -134,15 +134,15 @@ sets the initial memory reservation used, use <size>m for Mb or <size>g for Gb, 
     -e MC_MINMEM=512m
 
 
-#### SPIGOT_AUTORESTART
+#### MC_AUTORESTART
 
 This variable controlls the behavior of the container when the **stop** command is issued inside minecraft
 
-	-e SPIGOT_AUTORESTART=yes
+	-e MC_AUTORESTART=yes
    
 Which is the default behavior and does not need to be specified, the minecraft server will autostart if the **stop** command is issued.
 
-	-e SPIGOT_AUTORESTART=no
+	-e MC_AUTORESTART=no
 	
 If the **stop** command is issued the minecraft server will stay down until the container is restarted or the command **mc_start** is issued
 
@@ -201,7 +201,7 @@ To make yourself operator in the game use **mc_send** command, for example give 
 
 Default the minecraft server will automatically restart on a **stop** inside the minecraft application. You can override this behavior by using
 
-	-e SPIGOT_AUTORESTART=no
+	-e MC_AUTORESTART=no
 
 This will prevent the server to restart and minecraft has to be started again with the **mc_start** command
 
@@ -258,9 +258,9 @@ When a external volume is mounted the UID of the owner of the volume may not mat
 
 To address this problem a check is done between UID of the owner of /minecraft and the UID of the user minecraft. If there is a mismatch the UID of the minecraft user is changed to match the UID of the directory.
 
-If you don't want to do this and want to manually set the UID of the minecraft user there is a variable named SPIGOT_UID which defines the minecraft user UID, adding
+If you don't want to do this and want to manually set the UID of the minecraft user there is a variable named MC_UID which defines the minecraft user UID, adding
 
-	-e SPIGOT_UID=1132
+	-e MC_UID=1132
 
 sets the minecraft user UID to 1132.
 

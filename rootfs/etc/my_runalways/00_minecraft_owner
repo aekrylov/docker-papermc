@@ -35,15 +35,15 @@ MCDIR_OWNER=$(ls -ldn /minecraft | awk '{print $3}')
 MC_UID=$(grep ^minecraft /etc/passwd | awk -F ':' '{print $3}')
 
 # 
-# if SPIGOT_UID is set, set that UID for the user minecraft
+# if MC_UID is set, set that UID for the user minecraft
 #
 
-if [ -n "$SPIGOT_UID" ]; then
+if [ -n "$MC_UID" ]; then
 
-  echo "Force change UID of minecraft user to UID $SPIGOT_UID"
+  echo "Force change UID of minecraft user to UID $MC_UID"
 
-  set_mcuid $SPIGOT_UID
-  MC_UID=$SPIGOT_UID
+  set_mcuid $MC_UID
+  MC_UID=$MC_UID
 
 else
 

@@ -20,7 +20,7 @@
 
 
 MC_USER=minecraft       # User name running the minecraft server
-MC_PROC=spigot.jar   # name of minecraft jar file
+MC_PROC=server.jar   # name of minecraft jar file
 MC_DIR=/minecraft # Directory where the server should run
 
 if [ -z "$MC_MAXMEM" ]; then
@@ -50,7 +50,7 @@ Options:
   restart
     Restart the Minecraft server.
 
-  create <version> 
+  create <version>
     Create a minecraft server, version is the version of minecraft you want to use.
     latest gives the latest version. Does not clean other files in the directory
 
@@ -151,7 +151,7 @@ acceptEULA() {
   echo "$OK"
 }
 
-# 
+#
 # check that all is ok the start server
 #
 
@@ -169,7 +169,7 @@ checkOK() {
   if [ ! -f $MC_DIR/$MC_PROC ] ; then
 	echo "the minecraftfile $MC_DIR/$MC_PROC does not exist."
 	exit 1
-  fi 
+  fi
 
   # check to see that minecraft user can write in the
 
@@ -190,36 +190,25 @@ checkOK() {
 	echo "or run $0 accept-eula"
 	exit 1
   fi
-	
+
 }
 
 
 #
-# create spigot jar for requested version
+# download Paper jar for requested version
 #
 
 buildjar() {
   # build it if it not exists
-  if [ ! -f $SPIGOT_HOME/spigot-$1.jar ]; then
-    echo "Building spigot version ($1) jar file, be patient"
-    if [ -d /build-mc ]; then
-	rm -Rf /build-mc
-    fi
-    mkdir -p /build-mc
-    wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O /build-mc/BuildTools.jar
-    HOME=/build-mc
-    export HOME
-    cd $HOME
-    git config --global --unset core.autocrlf
-    java -Xmx1024M -jar BuildTools.jar --rev $1
-    cp /build-mc/Spigot/Spigot-Server/target/spigot-*.jar $SPIGOT_HOME/spigot-$1.jar
-    cd $SPIGOT_HOME/
-    rm -Rf /build-mc
+  cd $MC_HOME/
+  if [ ! -f server-$1.jar ]; then
+    echo "Downloading Paper version ($1) jar file"
+    wget https://papermc.io/api/v1/paper/$1/latest/download -O server-$1.jar
   fi
-  execCMD "rm -f $SPIGOT_HOME/spigot.jar"
-  execCMD "ln -s $SPIGOT_HOME/spigot-$1.jar $SPIGOT_HOME/spigot.jar"
+  execCMD "rm -f $MC_HOME/server.jar"
+  execCMD "ln -s $MC_HOME/server-$1.jar $MC_HOME/server.jar"
 }
-	
+
 #
 # prepare console files
 #
@@ -228,7 +217,7 @@ ResetConsoleFiles() {
 
 	rm -f $MC_DIR/input.con
 	rm -f $MC_DIR/output.con
-	
+
 	if [ -f $MC_DIR/input.con ]; then
 		echo "$MC_DIR/input.con could not be removed"
 		exit 1
@@ -262,12 +251,12 @@ ResetConsoleFiles() {
 start() {
    echo -n "Starting minecraft server as user $MC_USER..."
 
-   checkOK 
+   checkOK
 
    ResetConsoleFiles
 
 
-   # be in right working directory when starting 
+   # be in right working directory when starting
    cd $MC_DIR
 
    execCMD "tail -f --pid=\$$ $MC_DIR/input.con | { $JAVACMD $MC_JAVA_OPS -jar $MC_DIR/$MC_PROC nogui > $MC_DIR/output.con 2>&1 ; kill \$$ ; } " &
@@ -320,12 +309,12 @@ stop() {
      echo "Could not stop it"
      exit 1
   else
-     echo "Stopped" 
+     echo "Stopped"
   fi
 
 }
 seteula() {
-    
+
     # make sure that we have an eula.txt file to modifie
 
     createEULA
@@ -353,7 +342,7 @@ case "$1" in
     if [ $(isRunning) -eq 1 ] ; then
        stop
     else
-      echo "$MC_PROC is not running" 
+      echo "$MC_PROC is not running"
     fi
   ;;
 

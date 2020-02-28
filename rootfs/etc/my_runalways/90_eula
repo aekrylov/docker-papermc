@@ -5,8 +5,8 @@
 # (c) 2016 nimmis <kjell.havneskold@gmail.com>
 
 if [ ! -z $EULA ] ; then
-  
-  echo "eula=$EULA" > $SPIGOT_HOME/eula.txt
-  chown minecraft $SPIGOT_HOME/eula.txt 
 
-fi 
+  echo "eula=$EULA" > $MC_HOME/eula.txt
+  chown minecraft $MC_HOME/eula.txt
+
+fi
