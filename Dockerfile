@@ -1,4 +1,4 @@
-FROM nimmis/java:openjdk-8-jdk
+FROM openjdk:8-jdk
 
 MAINTAINER nimmis <kjell.havneskold@gmail.com>
 
