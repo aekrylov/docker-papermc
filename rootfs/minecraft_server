@@ -16,23 +16,17 @@
 
 
 MC_USER=minecraft       # User name running the minecraft server
-MC_DIR=/minecraft # Directory where the server should run
-
 
 USAGE=$(cat <<EOF
 Usage:  $0 <option>
 
 Options:
 
-  create <version>
+  create [<version>]
     Create a minecraft server, version is the version of minecraft you want to use.
-    latest gives the latest version. Does not clean other files in the directory
+    latest gives the latest version and is used by default.
+    Does not clean other files in the directory
 
-  accept-eula
-    Accepts Mojangs EULA and set eula.txt correct
-
-  backup
-    Makes a backup of the world
 EOF
 )
 
@@ -46,47 +40,6 @@ execCMD() {
 	else
 		sh -c "$1" $2
 	fi
-}
-
-#
-# setProp
-#
-# setProp <filename> <property> <value>
-#
-#
-setProp() {
-
-  grep -q "^$2\s*\=" $1
-
-  if [ $? -ne 0 ] ; then
-	echo "$prop=$val" >> $1
-  else
-    sed -i "/^$2\s*=/ c $2=$3" $1
-  fi
-
-}
-
-
-#
-# create eula.txt if it does not exist
-#
-
-createEULA() {
-
-  if [ ! -f $MC_DIR/eula.txt  ] ; then
-       execCMD "echo '#EULA file created by minecraft script\neula=false' > $MC_DIR/eula.txt"
-  fi
-
-}
-
-#
-# EULA accepted (0) or not (1)
-#
-
-acceptEULA() {
-  local OK=1
-  grep eula $MC_DIR/eula.txt |  grep -q 'true' && OK=0
-  echo "$OK"
 }
 
 
@@ -105,18 +58,6 @@ buildjar() {
   execCMD "ln -s $MC_HOME/server-$1.jar $MC_HOME/server.jar"
 }
 
-seteula() {
-
-    # make sure that we have an eula.txt file to modifie
-
-    createEULA
-
-    setProp $MC_DIR/eula.txt "eula" "true"
-
-    echo "EULA accepted"
-
-}
-
 case "$1" in
 
   create)
@@ -127,12 +68,6 @@ case "$1" in
     echo "Setting version to $SVER"
 
     buildjar $SVER
-  ;;
-
-  accept-eula)
-
-    seteula
-
   ;;
 
   console)
