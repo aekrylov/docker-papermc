@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM openjdk:8-jre-slim
 
 MAINTAINER aekrylov <github@aekrylov.me>
 
@@ -12,7 +12,7 @@ RUN /usr/sbin/useradd -s /bin/bash -d /minecraft -m minecraft
 
 # Install required packages
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -qy wget && \
     apt-get clean all
 
 # add extra files needed
