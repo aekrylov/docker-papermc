@@ -29,5 +29,6 @@ RUN apt-get update && \
 EXPOSE 25565
 
 USER minecraft
+WORKDIR /minecraft
 
 ENTRYPOINT ["/bin/bash", "/start.sh"]
