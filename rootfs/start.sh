@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 MC_PROC=server.jar
 
 # Fix owner
