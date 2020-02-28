@@ -17,6 +17,7 @@ RUN apt-get update && \
 
 # add extra files needed
 COPY rootfs /
+RUN chmod +x /usr/local/bin/mc_send
 
 # expose minecraft port
 EXPOSE 25565
