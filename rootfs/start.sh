@@ -16,6 +16,10 @@ download() {
   #
   # download Paper jar for requested version, if it doesnt exist already
   #
+  if [ -z "$1" ] ; then
+    echo "Minecraft version must be specified with MC_VER environment variable"
+    exit 1
+  fi
   if [ ! -f server-$1.jar ]; then
     echo "Downloading JAR for PaperMC v. $1"
     wget https://papermc.io/api/v1/paper/$1/latest/download -O server-$1.jar

@@ -11,7 +11,9 @@ The image is based on [nimmis/docker-spigot](https://github.com/nimmis/docker-sp
 
 To run the latest stable version of this image run
 
-	docker run -d -p 25565:25565 -e EULA=true aekrylov/papermc
+	docker run -d -p 25565:25565 -e EULA=true -e MC_VER=<Minecraft version> aekrylov/papermc
+
+You may specify any Minecraft version PaperMC has been built against (check a list [here](https://papermc.io/legacy)). 
 
 Note that
 
@@ -38,30 +40,17 @@ to the run command to give it the name minecraft, then you can start it easier w
 	docker start papermc
 	docker stop papermc
 
-## Selecting Minecraft version
-
-By default the image will download the latest available version of PaperMC. To use the server for a specific 
-Minecraft version, add an env parameter to the `docker run` line
-
-	-e MC_VER=<version>
-
-For example, to build it with version 1.8 add
-
-	-e MC_VER=1.8
-
 ## Memory settings
-
-There are two environment variables to set maximum and initial memory for spigot.
 
 ### MC_MAXMEM
 
-Sets the maximum memory to use <size>m for Mb or <size>g for Gb, if this parameter is not set 1 Gb is chosen, to set the maximum memory to 2 Gb
+Sets `-Xmx` (max amount of RAM Java can use). use `m` for megabytes, `g` for gigabytes. Default is `1g`
 
     -e MC_MAXMEM=2g
 
 ### MC_MINMEM
 
-Sets the initial memory reservation used, use <size>m for Mb or <size>g for Gb, if this parameter is not set, it is set to MC_MAXMEM, to set the initial size t0 512 Mb
+Sets `-Xms`, i.e. how much memory will be allocated right away. The default is equal to `MC_MAXMEM`
 
     -e MC_MINMEM=512m
 
@@ -80,25 +69,27 @@ You don't need to have an interactive container to be able to send commands to t
 
 	docker exec papermc mc_send "time set day"
 
-If this was the first command issued after a start the output should look like
+The output will look like this
 
-	[13:02:15 INFO]: Zombie Aggressive Towards Villager: true
-	[13:02:15 INFO]: Experience Merge Radius: 3.0
-	[13:02:15 INFO]: Preparing start region for level 0 (Seed: 506255305130990210)
-	[13:02:16 INFO]: Preparing spawn area: 22%
-	[13:02:17 INFO]: Preparing spawn area: 99%
-	[13:02:17 INFO]: Preparing start region for level 1 (Seed: 506255305130990210)
-	[13:02:18 INFO]: Preparing spawn area: 95%
-	[13:02:18 INFO]: Preparing start region for level 2 (Seed: 506255305130990210)
-	[13:02:18 INFO]: Server permissions file permissions.yml is empty, ignoring it
-	[13:02:18 INFO]: Done (3.650s)! For help, type "help" or "?"
-	[13:12:35 INFO]: Set the time to 1000
+    > op username
+    === Last lines of output (Ctrl-C to close): ===
+    [18:42:40 INFO]: View Distance: 10
+    [18:42:40 INFO]: Arrow Despawn Rate: 1200
+    [18:42:40 INFO]: Zombie Aggressive Towards Villager: true
+    [18:42:40 INFO]: Nerfing mobs spawned from spawners: false
+    [18:42:40 INFO]: Preparing start region for level minecraft:overworld (Seed: -1030601061642205236)
+    [18:42:40 INFO]: Preparing start region for level minecraft:the_nether (Seed: -1030601061642205236)
+    [18:42:40 INFO]: Preparing start region for level minecraft:the_end (Seed: -1030601061642205236)
+    [18:42:40 INFO]: Time elapsed: 92 ms
+    [18:42:40 INFO]: Done (14.371s)! For help, type "help"
+    [18:42:40 INFO]: Timings Reset
+    [18:46:19 INFO]: Made username a server operator
 
 It will continue to output everything from the console until you press CTRL-C
 
 ### /restart
 
-Due to the nature of Docker, the server can't restart by itself, so /restart command will simply stop the server 
+Due to the nature of Docker, the server can't restart by itself, so `/restart` command will simply stop the server 
 (and the container). Using Docker commands (`docker stop` / `docker start`) is preferred.
 
 ## Having the minecraft files on the host machine
