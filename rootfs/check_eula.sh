@@ -14,4 +14,4 @@ if [ ! -z $EULA ] ; then
   chown minecraft $MC_HOME/eula.txt
 fi
 
-grep eula $MC_DIR/eula.txt |  grep -q 'true' || echo "EULA not accepted! run with EULA=true in env to accept" >&2 && exit 1
+grep eula $MC_HOME/eula.txt |  grep -q 'true' || echo "EULA not accepted! run with EULA=true in env to accept" >&2 && exit 1
