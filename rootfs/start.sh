@@ -63,13 +63,13 @@ if [ -z "$MC_MAXMEM" ]; then
   MC_MAXMEM="1G"
 fi
 
-if [ -z  "$MC_MINMEM" ]; then
+if [ -z "$MC_MINMEM" ]; then
   MC_MINMEM=$MC_MAXMEM ;
 fi
 
-MC_JAVA_OPS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM"
+JAVA_OPTS="-Xmx$MC_MAXMEM -Xms$MC_MINMEM $JAVA_OPTS"
 
 # Start the server, passing additional arguments if needed
 rm -rf /input.con
 touch /input.con
-execCMD "tail -f /input.con | java $MC_JAVA_OPS -jar $MC_HOME/$MC_PROC nogui $*" | tee /output.con
+execCMD "tail -f /input.con | java $JAVA_OPTS -jar $MC_HOME/$MC_PROC nogui $*" | tee /output.con

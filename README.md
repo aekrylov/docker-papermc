@@ -1,7 +1,7 @@
 ## PaperMC server based on OpenJDK 8
 [![](https://images.microbadger.com/badges/image/aekrylov/papermc.svg)](https://microbadger.com/images/aekrylov/papermc "Get your own image badge on microbadger.com")
 
-This docker image builds and runs the Paper Minecraft server. 
+This docker image builds and runs the [PaperMC](https://papermc.io/) Minecraft server. 
 It downloads a Paperclip JAR on startup for the version specified 
 in the environment and saves it to the /minecraft folder.
 
@@ -9,50 +9,40 @@ The image is based on [nimmis/docker-spigot](https://github.com/nimmis/docker-sp
 
 ## How to use
 
-To run the latest stable version of this image run
+1. Prepare a `minecraft` folder that the server will store the data in. This is not required, 
+    but I highly recommend storing world data outside containers.
 
-	docker run -d -p 25565:25565 -e EULA=true -e MC_VER=<Minecraft version> aekrylov/papermc
+    If you're migrating from Spigot/non-docker Paper then simply make sure you dont have any `server-*.jar` files inside it
 
-You may specify any Minecraft version PaperMC has been built against (check a list [here](https://papermc.io/legacy)). 
+2. [Recommended] Create a minecraft user on the host system and make it owner of the `minecraft` folder. 
+    This way the server will be run from a non-root user
 
-Note that
+3. Run the server:
+    ```shell script
+    docker run -d -p 25565:25565 -e EULA=true -e MC_VER=<Minecraft version> --name papermc aekrylov/papermc
+    ```
+   You may specify any Minecraft version PaperMC has been built against (check a list [here](https://papermc.io/legacy)). 
+   Note that `-e EULA=true` indicates you agree with [Mojang EULA](https://account.mojang.com/documents/minecraft_eula), which is required to run the server.
 
-	-e EULA=true
+## Configuring the server
 
-indicates you agree with [Mojang EULA](https://account.mojang.com/documents/minecraft_eula), which is required to run the server.
+You can change config files the standard way. See [the docs](https://paper.readthedocs.io/en/latest/server/configuration.html)
+for a list op PaperMC configuration options. Arguments may be passed with docker run command. Also some predefied
+variables are available.
 
-The parameter
+### Memory settings
 
-	-p 25565:25565
+You can customize memory allocation setting by passing environment variables to the container. Example:
 
-tell on witch external port the internal 25565 should be connected, in this case the same, if
-you only type -p 25565 it will connect to a random port on the machine
+    docker run <..> -e MC_MAXMEM=2g -e MC_MINMEM=1g
 
-## Giving the container a name
+Available variables:
+* `MC_MAXMEM` sets `-Xmx` (max amount of RAM Java can use). use `m` for megabytes, `g` for gigabytes. Default is `1g`
+* `MC_MINMEM` sets `-Xms`, i.e. how much memory will be allocated right away. The default is equal to `MC_MAXMEM`
 
-To make it easier to handle you container you can give it a name instead of the long
-number thats normally give to it, add a
+### Additional JVM options
 
-	--name papermc
-
-to the run command to give it the name minecraft, then you can start it easier with
-
-	docker start papermc
-	docker stop papermc
-
-## Memory settings
-
-### MC_MAXMEM
-
-Sets `-Xmx` (max amount of RAM Java can use). use `m` for megabytes, `g` for gigabytes. Default is `1g`
-
-    -e MC_MAXMEM=2g
-
-### MC_MINMEM
-
-Sets `-Xms`, i.e. how much memory will be allocated right away. The default is equal to `MC_MAXMEM`
-
-    -e MC_MINMEM=512m
+You can pass additional JVM options using `JAVA_OPTS` env variable. Memory settings are prepended to it on startup
 
 ## Server logs
 
@@ -64,8 +54,7 @@ more in the [Docker documentation](https://docs.docker.com/engine/reference/comm
 
 ## Sending commands to the server console
 
-You don't need to have an interactive container to be able to send commands to the console. You can use
-`mc_send` executable available in the running container, using `docker exec`. For example
+Sending commands by attaching to the container is not available. Run `mc_send` command with `docker exec`. For example
 
 	docker exec papermc mc_send op username
 
@@ -87,25 +76,12 @@ The output will look like this
 
 It will continue to output everything from the console until you press CTRL-C
 
-### /restart
+### /restart caveat
 
 Due to the nature of Docker, the server can't restart by itself, so `/restart` command will simply stop the server 
-(and the container). Using Docker commands (`docker stop` / `docker start`) is preferred.
+(and the container). Using Docker commands (`docker stop` / `docker start`) is preferred. `docker stop` stops the server gracefully.
 
-## Having the minecraft files on the host machine
-
-If you delete the container all your filer in minecraft will be gone. To save them where it's
-easier to edit and do a backup of the files you can attach a directory from the host machine
-(where you run the docker command) and attach it to the local file system in the container.
-The syntax for it is
-
-	-v /host/path/to/dir:/container/path/to/dir
-
-To attach the minecraft directory in the container to directory /home/nimmis/mc-srv you add
-
-	-v /home/nimmis/mc-srv:/minecraft
-
-### Mounted volume caveats
+## Mounted volume caveats
 
 When a external volume is mounted the UID of the owner of the volume may not match the UID of the minecraft user (1000).
 This can result in problems with write/read access to the files. 
@@ -122,4 +98,4 @@ sets the minecraft user UID to 1132.
 
 ## Issues
 
-If you have any problems with or questions about this image, please submit a ticket through a [GitHub issue](https://github.com/aekrylov/docker-papermc/issues "GitHub issue")
+If you have any problems with or questions about this image, please submit a ticket through a [GitHub issue](https://github.com/aekrylov/docker-papermc/issues)
